@@ -3,6 +3,7 @@ var app       = express();
 var multer    = require('multer');
 var doublesub = require('doublesub');
 var fs        = require('fs');
+var Readable  = require('stream').Readable
 
 app.set('view engine', 'jade');
 
@@ -20,10 +21,15 @@ app.post('/',[ multer({ inMemory: true }), function(req, res){
   doublesub(optsObj, function(error, data){
     if (error) { res.send("SHIT JUST HAPPENED!") }
 
-    res.send(data);
+    res.setHeader('Content-disposition', 'attachment; filename=new.srt');
+    res.setHeader('Content-type',        'text/plain');
+
+    var s = new Readable;
+    s.push(data);
+    s.push(null);
+
+    s.pipe(res);
   });
-  // debugger;
-  // res.render('index');
 }]);
 
 var server = app.listen(3000, function () {
