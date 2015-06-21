@@ -8,14 +8,15 @@ var Readable  = require('stream').Readable
 app.set('view engine', 'jade');
 
 app.get('/', function (req, res) {
-  res.render('index');
+  languages = [["Albanian", "sq"], ["Arabian", "ar"], ["Armenian",   "hy"], ["Azeri",      "az"], ["Belarusian", "be"], ["Bosnian",    "bs"], ["Bulgarian",  "bg"], ["Catalan",    "ca"], ["Croatian",   "hr"], ["Czech",      "cs"], ["Chinese",    "zh"], ["Danish",     "da"], ["Dutch",      "nl"], ["English",    "en"], ["Estonian",   "et"], ["Finnish",    "fi"], ["French",     "fr"], ["Georgian",   "ka"], ["German",     "de"], ["Greek",      "el"], ["Hebrew",     "he"], ["Hungarian",  "hu"], ["Icelandic",  "is"], ["Indonesian", "id"], ["Italian",    "it"], ["Japanese",   "ja"], ["Korean",     "ko"], ["Latvian",    "lv"], ["Lithuanian", "lt"], ["Macedonian", "mk"], ["Malay",      "ms"], ["Maltese",    "mt"], ["Norwegian",  "no"], ["Polish",     "pl"], ["Portuguese", "pt"], ["Romanian",   "ro"], ["Russian",    "ru"], ["Spanish",    "es"], ["Serbian",    "sr"], ["Slovak",     "sk"], ["Slovenian",  "sl"], ["Swedish",    "sv"], ["Thai",       "th"], ["Turkish",    "tr"], ["Ukrainian",  "uk"], ["Vietnamese", "vi"]]
+  res.render('index', { languages: languages });
 });
 
 app.post('/',[ multer({ inMemory: true }), function(req, res){
   optsObj = {
     srtString: req.files.srt.buffer.toString('utf8'),
-    frLang:    "es",
-    toLang:    "en",
+    frLang:    req.body.frLang,
+    toLang:    req.body.toLang,
     yandexKey: process.env.YANDEX_KEY
   }
   doublesub(optsObj, function(error, data){

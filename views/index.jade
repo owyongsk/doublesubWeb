@@ -1,8 +1,25 @@
 html
   head
   body
-    h1!= "HELLO WORLD!"
+    h1!= "Append another translated subtitles at the bottom of your subtitle"
     form(role="form", action="/", method="post", enctype="multipart/form-data")
-      label Upload File
+      br
+      label Original Language
+      select(name="fromLang")
+        for lang in languages
+          option(value=lang[1]) #{lang[0]}
+      br
+
+      br
+      label New Language
+      select(name="toLang")
+        for lang in languages
+          option(value=lang[1]) #{lang[0]}
+      br
+
+      br
       input(type="file", name="srt", id="srt")
-      input(type="submit")
+      br
+
+      br
+      input(type="submit" value="Translate")
