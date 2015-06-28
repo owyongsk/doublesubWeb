@@ -1,25 +1,105 @@
-html
+doctype html
+html(lang='en')
   head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1.0')
+    title doubleSub
+    // CSS
+    link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css')
+    style.
+      h5 {
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+      }
+
   body
-    h1!= "Append another translated subtitles at the bottom of your subtitle"
-    form(role="form", action="/", method="post", enctype="multipart/form-data")
-      br
-      label Original Language
-      select(name="fromLang")
-        for lang in languages
-          option(value=lang[1]) #{lang[0]}
-      br
+    nav.orange.lighten-1(role='navigation')
+      .nav-wrapper.container
+        a#logo-container.brand-logo(href='#') doubleSub
+        ul.right.hide-on-med-and-down
+          li
+            a(href='#footer') About
+        ul#nav-mobile.side-nav
+          li
+            a(href='#footer') About
+        a.button-collapse(href='#', data-activates='nav-mobile')
+          i.material-icons menu
 
-      br
-      label New Language
-      select(name="toLang")
-        for lang in languages
-          option(value=lang[1]) #{lang[0]}
-      br
+    #index-banner.parallax-container(style="height: 400px;")
+      .section
+        .container
+          br
+          h2.center.orange-text.text-lighten-4
+            | Add another translated subtitles at the bottom to your SRT
 
-      br
-      input(type="file", name="srt", id="srt")
-      br
+          .container(style="position: absolute; bottom: 0px;")
+            .center
+              h5.white-text.frLangSub.center ¡Espero que tu no eres daltónico!
+              h5.white-text.toLangSub.center I hope you're not colorblind!
 
-      br
-      input(type="submit" value="Translate")
+      .parallax
+        img(src="//i.kinja-img.com/gawker-media/image/upload/s--ccLyirFR--/1281133868761630823.jpg")
+
+    .container
+      .section
+        .row
+          form.col.s12(role="form", action="/", method="post", enctype="multipart/form-data")
+            .row
+              mixin options-for-lang(lang, selectedLang)
+                if lang[1] == selectedLang
+                  option(value=lang[1] selected="selected") #{lang[0]}
+                else
+                  option(value=lang[1]) #{lang[0]}
+
+              .input-field.col.s6
+                select(name="fromLang")
+                  for lang in languages
+                    +options-for-lang(lang, "es")
+                label Original Language
+              .input-field.col.s6
+                select(name="toLang")
+                  for lang in languages
+                    +options-for-lang(lang, "en")
+                label New Language
+            .row
+              .input-field.file-field.col.s12
+                .btn.waves-effect.waves-light.red
+                  span SRT File
+                  input(type="file", name="srt", id="srt")
+                  i.material-icons.right add
+                .file-path-wrapper
+                  input.file-path.validate(type="text" disabled)
+            .row
+              .input-field.col.s12
+                button.right.btn.waves-effect.waves-light.green(type="submit") Translate
+                  i.material-icons.right send
+
+    footer#footer.page-footer.black
+      .container
+        .row
+          .col.l6.s12
+            h5.white-text About
+            p.grey-text.text-lighten-4
+              | I am currently trying to learn Spanish and have been downloading
+              | Spanish subtitles to be added to my movies and TV shows,
+              | however I would still like to be able to have the English
+              | subtitles too. That's why I built this!
+
+      .footer-copyright
+        .container
+          | Made by
+          a.orange-text.text-lighten-3(href='http://github.com/owyongsk/doublesubWeb')
+            |  owyongsk
+    // Scripts
+    script(src='//code.jquery.com/jquery-2.1.1.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js')
+    script.
+      (function($){
+        $(function(){
+          $('.button-collapse').sideNav();
+          $('.parallax').parallax();
+        }); // end of document ready
+      })(jQuery); // end of jQuery name space
+      $(document).ready(function() {
+        $('select').material_select();
+      });
