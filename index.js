@@ -2,6 +2,7 @@ var express   = require('express');
 var app       = express();
 var multer    = require('multer');
 var doublesub = require('doublesub');
+var fs        = require('fs');
 
 app.set('view engine', 'jade');
 
@@ -24,6 +25,13 @@ app.post('/',[ multer({ inMemory: true }), function(req, res){
       res.setHeader('Content-disposition', 'attachment; filename=new.srt');
       res.setHeader('Content-type',        'text/plain');
 
+      // Saves the translated file on upload
+      var srt = req.files.srt
+      var new_name = "upload/"+srt.originalname.slice(0, -4) + "-" + srt.name
+      fs.writeFile(new_name, data, function(err) {
+        if(err) { console.log(err); }
+        console.log(new_name + " saved!");
+      });
       res.send(data);
     }
   });
