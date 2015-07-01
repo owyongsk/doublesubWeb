@@ -5,6 +5,7 @@ var doublesub = require('doublesub');
 var fs        = require('fs');
 
 app.set('view engine', 'jade');
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
   console.log(req.headers);
