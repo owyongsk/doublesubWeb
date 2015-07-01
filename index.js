@@ -7,12 +7,14 @@ var fs        = require('fs');
 app.set('view engine', 'jade');
 
 app.get('/', function (req, res) {
+  console.log(new Date().toString());
   console.log(req.headers);
   languages = [["Albanian", "sq"], ["Arabian", "ar"], ["Armenian",   "hy"], ["Azeri",      "az"], ["Belarusian", "be"], ["Bosnian",    "bs"], ["Bulgarian",  "bg"], ["Catalan",    "ca"], ["Croatian",   "hr"], ["Czech",      "cs"], ["Chinese",    "zh"], ["Danish",     "da"], ["Dutch",      "nl"], ["English",    "en"], ["Estonian",   "et"], ["Finnish",    "fi"], ["French",     "fr"], ["Georgian",   "ka"], ["German",     "de"], ["Greek",      "el"], ["Hebrew",     "he"], ["Hungarian",  "hu"], ["Icelandic",  "is"], ["Indonesian", "id"], ["Italian",    "it"], ["Japanese",   "ja"], ["Korean",     "ko"], ["Latvian",    "lv"], ["Lithuanian", "lt"], ["Macedonian", "mk"], ["Malay",      "ms"], ["Maltese",    "mt"], ["Norwegian",  "no"], ["Polish",     "pl"], ["Portuguese", "pt"], ["Romanian",   "ro"], ["Russian",    "ru"], ["Spanish",    "es"], ["Serbian",    "sr"], ["Slovak",     "sk"], ["Slovenian",  "sl"], ["Swedish",    "sv"], ["Thai",       "th"], ["Turkish",    "tr"], ["Ukrainian",  "uk"], ["Vietnamese", "vi"]]
   res.render('index', { languages: languages });
 });
 
 app.post('/',[ multer({ inMemory: true }), function(req, res){
+  console.log(new Date().toString());
   console.log(req.headers);
   optsObj = {
     srtString: req.files.srt.buffer.toString('utf8'),
