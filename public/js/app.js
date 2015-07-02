@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-window.hash = require('./hash.js');
-var xmlrpc  = require('xmlrpc');
+window.open_sub_compute = require('./hash.js');
+var xmlrpc              = require('xmlrpc');
 
 client = xmlrpc.createClient({ host: "api.opensubtitles.org", path: "/xml-rpc" });
 
@@ -14,8 +14,14 @@ client.methodCall('LogIn', ["","","en","OSTestUserAgent"], function(err, res) {
   client.methodCall('LogOut', [token], function(err,res){console.log("LOGGED OUT!");})
 });
 
+$("input:file").change(function(e) {
+  open_sub_compute(e.target.files, function(err, res){
+    console.log(res.bytesize)
+  });
+});
+
 },{"./hash.js":2,"xmlrpc":10}],2:[function(require,module,exports){
-function calculateHash(d, callback) {
+function computeOpenSubIdentifier(d, callback) {
   function binl2hex(a) {
     var b = 255;
     a[1] += a[0] >> 8;
@@ -64,7 +70,7 @@ function calculateHash(d, callback) {
           f = c.target.result;
           for (d = 0; d < f.length; d++) e[(d + 8) % 8] += f.charCodeAt(d);
           a = 'all';
-          callback(null, binl2hex(e));
+          callback(null, { hash: binl2hex(e), bytesize: fs });
         }
       };
       g.readAsBinaryString(c)
@@ -73,7 +79,7 @@ function calculateHash(d, callback) {
   g.readAsBinaryString(c)
 }
 
-module.exports = calculateHash;
+module.exports = computeOpenSubIdentifier;
 
 },{}],3:[function(require,module,exports){
 (function (Buffer){
