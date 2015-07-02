@@ -6,14 +6,16 @@ client = xmlrpc.createClient({ host: "api.opensubtitles.org", path: "/xml-rpc" }
 
 client.methodCall('LogIn', ["","","en","OSTestUserAgent"], function(err, res) {
   var token = res.token;
-  client.methodCall('SearchSubtitles', [token, [{sublanguageid: "eng", moviehash: '51df0bf1a563628e', moviebytesize: '793302687'}]], function(err,res){
+  client.methodCall('SearchSubtitles'
+    , [token, [{sublanguageid: "eng", moviehash: '51df0bf1a563628e', moviebytesize: '793302687'}]]
+    , function(err,res){
     debugger
   });
   client.methodCall('LogOut', [token], function(err,res){console.log("LOGGED OUT!");})
 });
 
 },{"./hash.js":2,"xmlrpc":10}],2:[function(require,module,exports){
-function calculateHash(d) {
+function calculateHash(d, callback) {
   function binl2hex(a) {
     var b = 255;
     a[1] += a[0] >> 8;
@@ -62,7 +64,7 @@ function calculateHash(d) {
           f = c.target.result;
           for (d = 0; d < f.length; d++) e[(d + 8) % 8] += f.charCodeAt(d);
           a = 'all';
-          console.log(binl2hex(e));
+          callback(null, binl2hex(e));
         }
       };
       g.readAsBinaryString(c)
