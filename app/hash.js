@@ -1,4 +1,4 @@
-function calculateHash(d) {
+function computeOpenSubIdentifier(d, callback) {
   function binl2hex(a) {
     var b = 255;
     a[1] += a[0] >> 8;
@@ -47,7 +47,7 @@ function calculateHash(d) {
           f = c.target.result;
           for (d = 0; d < f.length; d++) e[(d + 8) % 8] += f.charCodeAt(d);
           a = 'all';
-          console.log(binl2hex(e));
+          callback(null, { hash: binl2hex(e), bytesize: fs });
         }
       };
       g.readAsBinaryString(c)
@@ -56,4 +56,4 @@ function calculateHash(d) {
   g.readAsBinaryString(c)
 }
 
-module.exports = calculateHash;
+module.exports = computeOpenSubIdentifier;
