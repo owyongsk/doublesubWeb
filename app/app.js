@@ -1,3 +1,6 @@
+/**
+ *     temporarily removing the ability to search by hash
+ *
 window.open_sub_compute = require('./hash.js');
 var xmlrpc              = require('xmlrpc');
 
@@ -22,13 +25,21 @@ var searchOpenSubs = function(os_identifier, callback){
     });
   });
 }
+**/
 
 $("input:file").change(function(e) {
+  $(".btn.right").prop("disabled", false);
+
+  /**
+   *   temporarily removing the abiltiy to search by hash
+   *
   open_sub_compute(e.target.files, function(err, res){
     if(err) callback(err)
+    console.log(res);
     searchOpenSubs(res, function(e,r){
       if (e) console.error(e)
       console.log(r);
     });
   });
+  **/
 });
