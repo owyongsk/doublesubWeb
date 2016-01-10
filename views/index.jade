@@ -8,12 +8,12 @@ html(lang='en')
     link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css')
     style.
-      h5 {
+      h5, h2 {
         text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
       }
 
   body
-    nav.orange.lighten-1(role='navigation')
+    nav.orange(role='navigation')
       .nav-wrapper.container
         a#logo-container.brand-logo(href='#') doubleSub
         ul.right.hide-on-med-and-down
@@ -29,13 +29,13 @@ html(lang='en')
       .section
         .container
           br
-          h2.center.orange-text.text-lighten-4
-            | Add another translated subtitles at the bottom to your SRT
+          h2.center.white-text
+            | Get two different language subtitles!
 
           .container(style="position: absolute; bottom: 0px;")
             .center
               h5.white-text.frLangSub.center ¡Espero que tu no eres daltónico!
-              h5.white-text.toLangSub.center I hope you're not colorblind!
+              h5.white-text.toLangSub.center I hope you're not colorblind! *translated*
 
       .parallax
         img(src="//i.kinja-img.com/gawker-media/image/upload/s--ccLyirFR--/1281133868761630823.jpg")
@@ -52,7 +52,7 @@ html(lang='en')
                   option(value=lang[1]) #{lang[0]}
 
               .input-field.col.s6
-                select(name="fromLang")
+                select(name="frLang")
                   for lang in languages
                     +options-for-lang(lang, "es")
                 label Original Language
@@ -60,30 +60,43 @@ html(lang='en')
                 select(name="toLang")
                   for lang in languages
                     +options-for-lang(lang, "en")
-                label New Language
+                label Tranlated Language
             .row
               .input-field.file-field.col.s12
                 .btn.waves-effect.waves-light.red
-                  span SRT File
-                  input(type="file", name="srt", id="srt")
+                  span Movie File
+                  input(type="file")
                   i.material-icons.right add
                 .file-path-wrapper
-                  input.file-path.validate(type="text" disabled)
+                  input.file-path.validate(type="text", name="file_name", readonly)
             .row
               .input-field.col.s12
-                button.right.btn.waves-effect.waves-light.green(type="submit") Translate
+                button.right.btn.waves-effect.waves-light.green(type="submit" disabled)
+                  | Download
                   i.material-icons.right send
+
+            #progress.row.hide
+              .col.s12
+                .progress
+                  .indeterminate
 
     footer#footer.page-footer.black
       .container
         .row
           .col.l6.s12
             h5.white-text About
-            p.grey-text.text-lighten-4
+            p.grey-text.text-lighten-4.flow-text
+              | This tool downloads the best subtitle in your chosen "Original
+              | Language" and adds a machine translated subtitle at the
+              | bottom. The machine translated ones might not be that accurate
+              | but it's a good way for you to learn the meaning of some words
+              br
+              br
+              | I built this because
               | I am currently trying to learn Spanish and have been downloading
               | Spanish subtitles to be added to my movies and TV shows,
-              | however I would still like to be able to have the English
-              | subtitles too. That's why I built this!
+              | however my Spanish is not fluent yet, so I would sometimes
+              | need the English ones too
 
       .footer-copyright
         .container
@@ -98,11 +111,21 @@ html(lang='en')
         $(function(){
           $('.button-collapse').sideNav();
           $('.parallax').parallax();
+          $('select').material_select();
+          $("input:file").change(function() {
+            $(".btn.right").prop("disabled", false);
+          });
+          $(".btn.right").click(function(){
+            $("#progress").removeClass("hide");
+            $(this).prop("disabled", true);
+            $(this).closest("form").submit();
+          });
+          window.onblur = function(){
+            $("#progress").addClass("hide");
+          }
         }); // end of document ready
       })(jQuery); // end of jQuery name space
-      $(document).ready(function() {
-        $('select').material_select();
-      });
+
     script.
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

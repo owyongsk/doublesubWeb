@@ -1,10 +1,13 @@
 var express   = require('express');
 var app       = express();
+
 var multer    = require('multer');
 var doublesub = require('doublesub');
 var fs        = require('fs');
+var exec      = require('child_process').exec;
 
 app.set('view engine', 'jade');
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
   console.log(new Date().toString());
@@ -16,27 +19,45 @@ app.get('/', function (req, res) {
 app.post('/',[ multer({ inMemory: true }), function(req, res){
   console.log(new Date().toString());
   console.log(req.headers);
-  optsObj = {
-    srtString: req.files.srt.buffer.toString('utf8'),
-    frLang:    req.body.frLang,
-    toLang:    req.body.toLang,
-    yandexKey: process.env.YANDEX_KEY
-  }
-  doublesub(optsObj, function(error, data){
-    if (error) {
+
+  var nameArr = req.body.file_name.split(".");
+  var name = nameArr.splice(0, nameArr.length - 1).join(".");
+
+  com = "subliminal download -e utf8 -d tmp -l " +
+        req.body.frLang + " " + req.body.file_name;
+  console.log(com);
+
+  exec(com, function(err1, stdout, stderr){
+    if (err1) {
       res.send("SHIT JUST HAPPENED!")
     } else {
-      res.setHeader('Content-disposition', 'attachment; filename=new.srt');
-      res.setHeader('Content-type',        'text/plain');
+      fs.readFile("./tmp/"+name+"."+req.body.frLang+".srt", "utf8", function(err2, string){
+        if (err2) {
+          res.send("SHIT JUST HAPPENED!")
+        } else {
+          optsObj = {
+            srtString: string,
+            frLang:    req.body.frLang,
+            toLang:    req.body.toLang,
+            yandexKey: process.env.YANDEX_KEY
+          }
+          doublesub(optsObj, function(err3, data){
+            if (err3) {
+              res.send("SHIT JUST HAPPENED!")
+            } else {
+              newFileName = name+"."+req.body.frLang+"."+req.body.toLang+".srt";
 
-      // Saves the translated file on upload
-      var srt = req.files.srt
-      var new_name = "upload/"+srt.originalname.slice(0, -4) + "-" + srt.name
-      fs.writeFile(new_name, data, function(err) {
-        if(err) { console.log(err); }
-        console.log(new_name + " saved!");
+              // Saves the translated file on upload
+              var newFile = "upload/"+newFileName;
+              fs.writeFile(newFile, data, function(err4) {
+                if(err4) { console.log(err4); }
+                console.log(newFile + " saved!");
+                res.download(newFile);
+              });
+            }
+          });
+        }
       });
-      res.send(data);
     }
   });
 }]);
