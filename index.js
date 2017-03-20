@@ -29,7 +29,7 @@ app.post('/',[ multer({ inMemory: true }), function(req, res){
 
   exec(com, function(err1, stdout, stderr){
     if (err1) {
-      res.send("SHIT JUST HAPPENED!")
+      res.send("Sorry! We could not find a subtitles for your video file, please try another one?")
     } else {
       fs.readFile("./tmp/"+name+"."+req.body.frLang+".srt", "utf8", function(err2, string){
         if (err2) {
